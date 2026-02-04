@@ -3,28 +3,30 @@
     <#if section = "form">
         <#if realm.password>
             <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
-                <div class="omisi-form-group">
-                    <label for="username" class="omisi-label">
-                        <#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if>
-                    </label>
-                    <div class="omisi-input-wrapper">
-                        <input tabindex="1" id="username" class="omisi-input" name="username" value="${(login.username!'')}" type="text" autofocus autocomplete="off"
-                               aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>"
-                               placeholder="<#if !realm.loginWithEmailAllowed>${msg("usernamePlaceholder","Nhập username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmailPlaceholder","Nhập username")}<#else>${msg("emailPlaceholder","Nhập email")}</#if>"
-                        />
-                        <span class="omisi-input-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </span>
+                <#if !usernameHidden??>
+                    <div class="omisi-form-group">
+                        <label for="username" class="omisi-label">
+                            <#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if>
+                        </label>
+                        <div class="omisi-input-wrapper">
+                            <input tabindex="1" id="username" class="omisi-input" name="username" value="${(login.username!'')}" type="text" autofocus autocomplete="off"
+                                   aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>"
+                                   placeholder="<#if !realm.loginWithEmailAllowed>${msg("usernamePlaceholder","Nhập username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmailPlaceholder","Nhập username")}<#else>${msg("emailPlaceholder","Nhập email")}</#if>"
+                            />
+                            <span class="omisi-input-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                        </div>
+                        <#if messagesPerField.existsError('username','password')>
+                            <span class="omisi-error-message" aria-live="polite">
+                                ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
+                            </span>
+                        </#if>
                     </div>
-                    <#if messagesPerField.existsError('username','password')>
-                        <span class="omisi-error-message" aria-live="polite">
-                            ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
-                        </span>
-                    </#if>
-                </div>
+                </#if>
 
                 <div class="omisi-form-group">
                     <label for="password" class="omisi-label">${msg("password")}</label>
@@ -44,6 +46,11 @@
                             </svg>
                         </span>
                     </div>
+                    <#if usernameHidden?? && messagesPerField.existsError('username','password')>
+                        <span class="omisi-error-message" aria-live="polite">
+                            ${kcSanitize(messagesPerField.getFirstError('username','password'))?no_esc}
+                        </span>
+                    </#if>
                 </div>
 
                 <div class="omisi-options-row">
